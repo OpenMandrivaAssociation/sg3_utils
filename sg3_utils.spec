@@ -9,6 +9,7 @@ License:	GPL
 Group:		System/Kernel and hardware
 URL:		http://www.torque.net/sg/u_index.html
 Source0:	http://www.torque.net/sg/p/%{name}-%{version}.tgz
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 BuildRequires:	libtool
 
