@@ -1,17 +1,17 @@
 %define	major 1
 %define libname	%mklibname sgutils %{major}
+%define develname %mklibname sgutils -d
 
 Summary:	Utils for Linux's SCSI generic driver devices + raw devices
 Name:		sg3_utils
-Version:	1.23
+Version:	1.25
 Release:	%mkrel 1
-License:	GPL
+License:	GPL+
 Group:		System/Kernel and hardware
 URL:		http://www.torque.net/sg/u_index.html
 Source0:	http://www.torque.net/sg/p/%{name}-%{version}.tgz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-
 BuildRequires:	libtool
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 Collection of tools for SCSI devices that use the Linux SCSI
@@ -27,22 +27,22 @@ used on the primary block device name (e.g. /dev/sda).]
 Warning: Some of these tools access the internals of your system
 and the incorrect usage of them may render your system inoperable.
 
-%package -n	%{libname}
+%package -n %{libname}
 Summary:	Shared library for %{name}
 Group:		System/Libraries
 
-%description -n	%{libname}
+%description -n %{libname}
 This package contains the shared library for %{name}.
 
-%package -n	%{libname}-devel
+%package -n %{develname}
 Summary:	Static library and header files for the sgutils library
 Group:		Development/C
-Obsoletes:	%{name}-devel
-Provides:	%{name}-devel = %{version}
-Provides:	libsgutils-devel = %{version}
-Requires:	%{libname} = %{version}
+Provides:	%{name}-devel = %{version}-%{release}
+Provides:	libsgutils-devel = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
+Obsoletes:	%mklibname sgutils 1 -d
 
-%description -n	%{libname}-devel
+%description -n	%{develname}
 This package contains the static sgutils library and its header
 files.
 
@@ -50,17 +50,14 @@ files.
 %setup -q
 
 %build
-%make CFLAGS="%{optflags}" LIBDIR="%{_libdir}"
+%configure2_5x \
+	--bindir=%{_sbindir}
+%make
 
 %install
 rm -rf %{buildroot}
 
-%makeinstall_std \
-	PREFIX=%{_prefix} \
-	LIBDIR=%{buildroot}%{_libdir} \
-	INSTDIR=%{buildroot}%{_sbindir} \
-	MANDIR=%{buildroot}%{_mandir} \
-	INCLUDEDIR=%{buildroot}%{_includedir}
+%makeinstall_std 
 
 %post -n %{libname} -p /sbin/ldconfig
 
@@ -71,19 +68,17 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%doc CHANGELOG COVERAGE CREDITS README README.sg_start
+%doc ChangeLog COVERAGE CREDITS README README.sg_start
 %attr(0755,root,root) %{_sbindir}/*
 %{_mandir}/man8/*
 
 %files -n %{libname}
 %defattr(-,root,root)
-%{_libdir}/*.so.*
+%{_libdir}/*.so.%{major}*
 
-%files -n %{libname}-devel
+%files -n %{develname}
 %defattr(-,root,root)
 %{_includedir}/scsi/*.h
 %{_libdir}/*.so
 %{_libdir}/*.a
 %{_libdir}/*.la
-
-
