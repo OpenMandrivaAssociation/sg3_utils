@@ -4,14 +4,13 @@
 
 Summary:	Utils for Linux's SCSI generic driver devices + raw devices
 Name:		sg3_utils
-Version:	1.31
-Release:	%mkrel 2
+Version:	1.33
+Release:	1
 License:	GPL+
 Group:		System/Kernel and hardware
 URL:		http://sg.danny.cz/sg/sg3_utils.html
 Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tar.bz2
 BuildRequires:	libtool
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 Collection of tools for SCSI devices that use the Linux SCSI
@@ -43,6 +42,18 @@ Requires:	%{libname} = %{version}-%{release}
 Obsoletes:	%{mklibname sgutils 1 -d} < 1.26
 
 %description -n	%{develname}
+This package contains the sgutils library and its header
+files.
+
+%define devel_name_static %mklibname %{name} -d -s
+%package -n	%{devel_name_static}
+Summary:	Static library and header files for the sgutils library
+Group:		Development/C
+Provides:	%{name}-static-devel = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
+Obsoletes:      %{mklibname sgutils 1 -d} < 1.26
+
+%description -n	%{devel_name_static}
 This package contains the static sgutils library and its header
 files.
 
@@ -55,34 +66,21 @@ files.
 %make
 
 %install
-rm -rf %{buildroot}
-
 %makeinstall_std 
+find %{buildroot} -name \*.la|xargs rm -f
 
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
-
-%clean
-rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root)
 %doc ChangeLog COVERAGE CREDITS README README.sg_start
 %attr(0755,root,root) %{_sbindir}/*
 %{_mandir}/man8/*
 
 %files -n %{libname}
-%defattr(-,root,root)
 %{_libdir}/*.so.%{major}*
 
 %files -n %{develname}
-%defattr(-,root,root)
 %{_includedir}/scsi/*.h
 %{_libdir}/*.so
+
+%files -n %{devel_name_static}
 %{_libdir}/*.a
-%{_libdir}/*.la
