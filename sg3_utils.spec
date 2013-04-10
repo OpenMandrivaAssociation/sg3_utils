@@ -4,7 +4,7 @@
 
 Summary:	Utils for Linux's SCSI generic driver devices + raw devices
 Name:		sg3_utils
-Version:	1.34
+Version:	1.35
 Release:	1
 License:	GPL+
 Group:		System/Kernel and hardware
@@ -51,7 +51,7 @@ Summary:	Static library and header files for the sgutils library
 Group:		Development/C
 Provides:	%{name}-static-devel = %{version}-%{release}
 Requires:	%{libname} = %{version}-%{release}
-Obsoletes:      %{mklibname sgutils 1 -d} < 1.26
+Obsoletes:	%{mklibname sgutils 1 -d} < 1.26
 
 %description -n	%{devel_name_static}
 This package contains the static sgutils library and its header
