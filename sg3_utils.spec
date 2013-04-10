@@ -9,7 +9,7 @@ Release:	1
 License:	GPL+
 Group:		System/Kernel and hardware
 URL:		http://sg.danny.cz/sg/sg3_utils.html
-Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tar.bz2
+Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tgz
 BuildRequires:	libtool
 
 %description
