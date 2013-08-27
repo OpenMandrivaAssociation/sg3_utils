@@ -62,7 +62,8 @@ files.
 
 %build
 %configure2_5x \
-	--bindir=%{_sbindir}
+	--bindir=%{_sbindir} \
+	--enable-static
 %make
 
 %install
