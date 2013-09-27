@@ -1,6 +1,7 @@
-%define	major 2
-%define libname	%mklibname sgutils %{major}
-%define develname %mklibname sgutils -d
+%define	major	2
+%define	libname	%mklibname sgutils %{major}
+%define	devname	%mklibname sgutils -d
+%define	static	%mklibname sgutils -d -s
 
 Summary:	Utils for Linux's SCSI generic driver devices + raw devices
 Name:		sg3_utils
@@ -10,7 +11,6 @@ License:	GPL+
 Group:		System/Kernel and hardware
 URL:		http://sg.danny.cz/sg/sg3_utils.html
 Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tgz
-BuildRequires:	libtool
 
 %description
 Collection of tools for SCSI devices that use the Linux SCSI
@@ -26,34 +26,32 @@ used on the primary block device name (e.g. /dev/sda).]
 Warning: Some of these tools access the internals of your system
 and the incorrect usage of them may render your system inoperable.
 
-%package -n %{libname}
+%package -n	%{libname}
 Summary:	Shared library for %{name}
 Group:		System/Libraries
 
-%description -n %{libname}
+%description -n	%{libname}
 This package contains the shared library for %{name}.
 
-%package -n %{develname}
+%package -n	%{devname}
 Summary:	Static library and header files for the sgutils library
 Group:		Development/C
-Provides:	%{name}-devel = %{version}-%{release}
-Provides:	libsgutils-devel = %{version}-%{release}
-Requires:	%{libname} = %{version}-%{release}
+Provides:	%{name}-devel = %{EVRD}
+Requires:	%{libname} = %{EVRD}
 Obsoletes:	%{mklibname sgutils 1 -d} < 1.26
 
-%description -n	%{develname}
+%description -n	%{devname}
 This package contains the sgutils library and its header
 files.
 
-%define devel_name_static %mklibname %{name} -d -s
-%package -n	%{devel_name_static}
+%package -n	%{static}
 Summary:	Static library and header files for the sgutils library
 Group:		Development/C
-Provides:	%{name}-static-devel = %{version}-%{release}
-Requires:	%{libname} = %{version}-%{release}
+Provides:	%{name}-static-devel = %{EVRD}
+Requires:	%{libname} = %{EVRD}
 Obsoletes:	%{mklibname sgutils 1 -d} < 1.26
 
-%description -n	%{devel_name_static}
+%description -n	%{static}
 This package contains the static sgutils library and its header
 files.
 
@@ -68,20 +66,18 @@ files.
 
 %install
 %makeinstall_std 
-find %{buildroot} -name \*.la|xargs rm -f
-
 
 %files
 %doc ChangeLog COVERAGE CREDITS README README.sg_start
-%attr(0755,root,root) %{_sbindir}/*
+%{_sbindir}/*
 %{_mandir}/man8/*
 
 %files -n %{libname}
 %{_libdir}/*.so.%{major}*
 
-%files -n %{develname}
+%files -n %{devname}
 %{_includedir}/scsi/*.h
 %{_libdir}/*.so
 
-%files -n %{devel_name_static}
+%files -n %{static}
 %{_libdir}/*.a
