@@ -3,6 +3,8 @@
 %define	devname	%mklibname sgutils -d
 %define	static	%mklibname sgutils -d -s
 
+%bcond_without uclibc
+
 Summary:	Utils for Linux's SCSI generic driver devices + raw devices
 Name:		sg3_utils
 Version:	1.36
@@ -11,8 +13,30 @@ License:	GPL+
 Group:		System/Kernel and hardware
 URL:		http://sg.danny.cz/sg/sg3_utils.html
 Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tgz
+Patch0:		sg3_utils-1.36-fix-out-of-source-build-includes.patch
+%if %{with uclibc}
+BuildRequires:	uClibc-devel
+%endif
 
 %description
+Collection of tools for SCSI devices that use the Linux SCSI
+generic (sg) interface. Includes utilities to copy data based on
+"dd" syntax and semantics (called sg_dd, sgp_dd and sgm_dd); check
+INQUIRY data and associated pages (sg_inq); check mode and log
+pages (sg_modes and sg_logs); spin up and down disks (sg_start);
+do self tests (sg_senddiag); and various other functions. See the
+README and CHANGELOG files. Requires the lk 2.4 series or better.
+[In the lk 2.5 development series many of these utilities can be
+used on the primary block device name (e.g. /dev/sda).]
+
+Warning: Some of these tools access the internals of your system
+and the incorrect usage of them may render your system inoperable.
+
+%package -n	uclibc-%{name}
+Summary:	Utils for Linux's SCSI generic driver devices + raw devices (uClibc build)
+Group:		System/Kernel and hardware
+
+%description -n	uclibc-%{name}
 Collection of tools for SCSI devices that use the Linux SCSI
 generic (sg) interface. Includes utilities to copy data based on
 "dd" syntax and semantics (called sg_dd, sgp_dd and sgm_dd); check
@@ -33,11 +57,21 @@ Group:		System/Libraries
 %description -n	%{libname}
 This package contains the shared library for %{name}.
 
+%package -n	uclibc-%{libname}
+Summary:	Shared library for %{name} (uClibc build)
+Group:		System/Libraries
+
+%description -n	uclibc-%{libname}
+This package contains the shared library for %{name}.
+
 %package -n	%{devname}
 Summary:	Static library and header files for the sgutils library
 Group:		Development/C
 Provides:	%{name}-devel = %{EVRD}
 Requires:	%{libname} = %{EVRD}
+%if %{with uclibc}
+Requires:	uclibc-%{libname} = %{EVRD}
+%endif
 Obsoletes:	%{mklibname sgutils 1 -d} < 1.26
 
 %description -n	%{devname}
@@ -57,27 +91,57 @@ files.
 
 %prep
 %setup -q
+%patch0 -p1 -b .include~
+autoreconf -fi
 
 %build
+export CONFIGURE_TOP="$PWD"
+%if %{with uclibc}
+mkdir -p uclibc
+pushd uclibc
+%uclibc_configure \
+	--bindir=%{uclibc_root}/%{_sbindir}
+%make
+popd
+%endif
+
+mkdir -p glibc
+pushd glibc
 %configure2_5x \
 	--bindir=%{_sbindir} \
 	--enable-static
 %make
+popd
 
 %install
-%makeinstall_std 
+%if %{with uclibc}
+%makeinstall_std -C uclibc
+%endif
+%makeinstall_std -C glibc
 
 %files
 %doc ChangeLog COVERAGE CREDITS README README.sg_start
 %{_sbindir}/*
 %{_mandir}/man8/*
 
+%if %{with uclibc}
+%files -n uclibc-%{name}
+%{uclibc_root}%{_sbindir}/*
+%endif
+
 %files -n %{libname}
 %{_libdir}/*.so.%{major}*
+
+%if %{with uclibc}
+%{uclibc_root}%{_libdir}/*.so.%{major}*
+%endif
 
 %files -n %{devname}
 %{_includedir}/scsi/*.h
 %{_libdir}/*.so
+%if %{with uclibc}
+%{uclibc_root}%{_libdir}/*.so
+%endif
 
 %files -n %{static}
 %{_libdir}/*.a
