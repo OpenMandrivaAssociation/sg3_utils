@@ -132,6 +132,7 @@ popd
 %files -n %{libname}
 %{_libdir}/*.so.%{major}*
 
+%files -n uclibc-%{libname}
 %if %{with uclibc}
 %{uclibc_root}%{_libdir}/*.so.%{major}*
 %endif
