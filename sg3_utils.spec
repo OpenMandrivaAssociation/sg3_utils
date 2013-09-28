@@ -1,19 +1,24 @@
+%define rescan_version 1.56
+%define rescan_script rescan-scsi-bus.sh
+
 %define	major	2
 %define	libname	%mklibname sgutils %{major}
 %define	devname	%mklibname sgutils -d
 %define	static	%mklibname sgutils -d -s
 
-%bcond_without uclibc
+%bcond_without	uclibc
 
 Summary:	Utils for Linux's SCSI generic driver devices + raw devices
 Name:		sg3_utils
 Version:	1.36
-Release:	1
+Release:	2
 License:	GPL+
 Group:		System/Kernel and hardware
 URL:		http://sg.danny.cz/sg/sg3_utils.html
 Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tgz
+Source1:	http://www.garloff.de/kurt/linux/%{rescan_script}-%{rescan_version}
 Patch0:		sg3_utils-1.36-fix-out-of-source-build-includes.patch
+Patch1:		rescan-scsi-bus-fixes.patch
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
 %endif
@@ -92,6 +97,8 @@ files.
 %prep
 %setup -q
 %patch0 -p1 -b .include~
+cp -p %{SOURCE1} %{rescan_script}
+%patch1 -p1 -b .rescan_scsi~
 autoreconf -fi
 
 %build
@@ -119,8 +126,12 @@ popd
 %endif
 %makeinstall_std -C glibc
 
+install -p -m755 %{rescan_script} -D %{buildroot}%{_bindir}/%{rescan_script}
+ln -s %{rescan_script} %{buildroot}/%{_bindir}/scsi-rescan
+
 %files
 %doc ChangeLog COVERAGE CREDITS README README.sg_start
+%{_bindir}/*
 %{_sbindir}/*
 %{_mandir}/man8/*
 
