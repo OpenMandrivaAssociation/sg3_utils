@@ -11,7 +11,7 @@
 Summary:	Utils for Linux's SCSI generic driver devices + raw devices
 Name:		sg3_utils
 Version:	1.36
-Release:	2
+Release:	2.1
 License:	GPL+
 Group:		System/Kernel and hardware
 URL:		http://sg.danny.cz/sg/sg3_utils.html
