@@ -73,6 +73,7 @@ Summary:	Static library and header files for the sgutils library
 Group:		Development/C
 Provides:	uclibc-%{name}-devel = %{EVRD}
 Requires:	%{devname} = %{EVRD}
+Requires:	uclibc-%{libname} = %{EVRD}
 Conflicts:	%{devname} < 1.38-5
 
 %description -n	uclibc-%{devname}
