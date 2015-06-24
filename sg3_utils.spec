@@ -11,13 +11,14 @@
 Summary:	Utils for Linux's SCSI generic driver devices + raw devices
 Name:		sg3_utils
 Version:	1.38
-Release:	4
+Release:	5
 License:	GPL+
 Group:		System/Kernel and hardware
 URL:		http://sg.danny.cz/sg/sg3_utils.html
 Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tgz
 #Source1:	http://www.garloff.de/kurt/linux/%{rescan_script}-%{rescan_version}
 Source2:	scsi-rescan.8
+Source3:	%{name}.rpmlintrc
 Patch0:		sg3_utils-1.38-fix-out-of-source-build-includes.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=920687
 Patch1:		sg3_utils-1.37-dont-open-dev-snapshot.patch
@@ -41,6 +42,7 @@ used on the primary block device name (e.g. /dev/sda).]
 Warning: Some of these tools access the internals of your system
 and the incorrect usage of them may render your system inoperable.
 
+%if %{with uclibc}
 %package -n	uclibc-%{name}
 Summary:	Utils for Linux's SCSI generic driver devices + raw devices (uClibc build)
 Group:		System/Kernel and hardware
@@ -59,13 +61,6 @@ used on the primary block device name (e.g. /dev/sda).]
 Warning: Some of these tools access the internals of your system
 and the incorrect usage of them may render your system inoperable.
 
-%package -n	%{libname}
-Summary:	Shared library for %{name}
-Group:		System/Libraries
-
-%description -n	%{libname}
-This package contains the shared library for %{name}.
-
 %package -n	uclibc-%{libname}
 Summary:	Shared library for %{name} (uClibc build)
 Group:		System/Libraries
@@ -73,14 +68,30 @@ Group:		System/Libraries
 %description -n	uclibc-%{libname}
 This package contains the shared library for %{name}.
 
+%package -n	uclibc-%{devname}
+Summary:	Static library and header files for the sgutils library
+Group:		Development/C
+Provides:	uclibc-%{name}-devel = %{EVRD}
+Requires:	%{devname} = %{EVRD}
+Conflicts:	%{devname} < 1.38-5
+
+%description -n	uclibc-%{devname}
+This package contains the sgutils library and its header
+files.
+%endif
+
+%package -n	%{libname}
+Summary:	Shared library for %{name}
+Group:		System/Libraries
+
+%description -n	%{libname}
+This package contains the shared library for %{name}.
+
 %package -n	%{devname}
 Summary:	Static library and header files for the sgutils library
 Group:		Development/C
 Provides:	%{name}-devel = %{EVRD}
 Requires:	%{libname} = %{EVRD}
-%if %{with uclibc}
-Requires:	uclibc-%{libname} = %{EVRD}
-%endif
 Obsoletes:	%{mklibname sgutils 1 -d} < 1.26
 
 %description -n	%{devname}
@@ -118,7 +129,7 @@ popd
 
 mkdir -p glibc
 pushd glibc
-%configure2_5x \
+%configure \
 	--bindir=%{_sbindir} \
 	--enable-static
 %make
@@ -143,22 +154,20 @@ install -p -m644 %{SOURCE2} -D %{buildroot}%{_mandir}/man8/scsi-rescan.8
 %if %{with uclibc}
 %files -n uclibc-%{name}
 %{uclibc_root}%{_sbindir}/*
+
+%files -n uclibc-%{libname}
+%{uclibc_root}%{_libdir}/*.so.%{major}*
+
+%files -n uclibc-%{devname}
+%{uclibc_root}%{_libdir}/*.so
 %endif
 
 %files -n %{libname}
 %{_libdir}/*.so.%{major}*
 
-%files -n uclibc-%{libname}
-%if %{with uclibc}
-%{uclibc_root}%{_libdir}/*.so.%{major}*
-%endif
-
 %files -n %{devname}
 %{_includedir}/scsi/*.h
 %{_libdir}/*.so
-%if %{with uclibc}
-%{uclibc_root}%{_libdir}/*.so
-%endif
 
 %files -n %{static}
 %{_libdir}/*.a
