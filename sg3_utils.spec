@@ -6,16 +6,16 @@
 %define	devname	%mklibname sgutils -d
 %define	static	%mklibname sgutils -d -s
 
-%bcond_without	uclibc
+%bcond_with	uclibc
 
 Summary:	Utils for Linux's SCSI generic driver devices + raw devices
 Name:		sg3_utils
-Version:	1.38
-Release:	7
+Version:	1.41
+Release:	1
 License:	GPL+
 Group:		System/Kernel and hardware
 URL:		http://sg.danny.cz/sg/sg3_utils.html
-Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tgz
+Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tar.xz
 #Source1:	http://www.garloff.de/kurt/linux/%{rescan_script}-%{rescan_version}
 Source2:	scsi-rescan.8
 Source3:	%{name}.rpmlintrc
