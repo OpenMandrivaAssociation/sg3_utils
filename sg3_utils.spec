@@ -22,8 +22,6 @@ Source3:	%{name}.rpmlintrc
 Patch0:		sg3_utils-1.38-fix-out-of-source-build-includes.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=920687
 Patch1:		sg3_utils-1.37-dont-open-dev-snapshot.patch
-# update configure for ppc64le (#1079542)
-Patch2:		sg3_utils-1.38-ppc64le.patch
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
 %endif
@@ -112,9 +110,8 @@ files.
 
 %prep
 %setup -q
-%patch0 -p1 -b .include~
+#patch0 -p1 -b .include~
 %patch1 -p1 -b .dev-snapshot
-%patch2 -p1 -b .ppc64le
 autoreconf -fi
 
 %build
