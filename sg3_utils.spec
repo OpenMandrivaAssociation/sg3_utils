@@ -17,7 +17,7 @@ Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tar.xz
 #Source1:	http://www.garloff.de/kurt/linux/%{rescan_script}-%{rescan_version}
 Source2:	scsi-rescan.8
 Source3:	%{name}.rpmlintrc
-Patch0:		sg3_utils-1.38-fix-out-of-source-build-includes.patch
+#Patch0:		sg3_utils-1.38-fix-out-of-source-build-includes.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=920687
 Patch1:		sg3_utils-1.37-dont-open-dev-snapshot.patch
 
@@ -65,9 +65,8 @@ This package contains the static sgutils library and its header
 files.
 
 %prep
-%setup -q
-#patch0 -p1 -b .include~
-%patch1 -p1 -b .dev-snapshot
+%autosetup -p1
+
 autoreconf -fi
 
 %build
