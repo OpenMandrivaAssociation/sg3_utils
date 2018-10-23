@@ -18,8 +18,6 @@ Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tar.xz
 Source2:	scsi-rescan.8
 Source3:	%{name}.rpmlintrc
 #Patch0:		sg3_utils-1.38-fix-out-of-source-build-includes.patch
-# https://bugzilla.redhat.com/show_bug.cgi?id=920687
-Patch1:		sg3_utils-1.37-dont-open-dev-snapshot.patch
 
 %description
 Collection of tools for SCSI devices that use the Linux SCSI
