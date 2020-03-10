@@ -8,8 +8,8 @@
 
 Summary:	Utils for Linux's SCSI generic driver devices + raw devices
 Name:		sg3_utils
-Version:	1.44
-Release:	2
+Version:	1.45
+Release:	1
 License:	GPL+
 Group:		System/Kernel and hardware
 URL:		http://sg.danny.cz/sg/sg3_utils.html
@@ -17,7 +17,6 @@ Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tar.xz
 #Source1:	http://www.garloff.de/kurt/linux/%{rescan_script}-%{rescan_version}
 Source2:	scsi-rescan.8
 Source3:	%{name}.rpmlintrc
-#Patch0:		sg3_utils-1.38-fix-out-of-source-build-includes.patch
 
 %description
 Collection of tools for SCSI devices that use the Linux SCSI
