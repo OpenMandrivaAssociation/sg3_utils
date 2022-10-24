@@ -8,7 +8,7 @@
 
 Summary:	Utils for Linux's SCSI generic driver devices + raw devices
 Name:		sg3_utils
-Version:	1.45
+Version:	1.47
 Release:	1
 License:	GPL+
 Group:		System/Kernel and hardware
@@ -63,7 +63,6 @@ files.
 
 %prep
 %autosetup -p1
-
 autoreconf -fi
 
 %build
@@ -83,7 +82,9 @@ install -p -m644 %{SOURCE2} -D %{buildroot}%{_mandir}/man8/scsi-rescan.8
 %files
 %doc ChangeLog COVERAGE CREDITS README README.sg_start
 %{_bindir}/*
+%if "%{_bindir}" != "%{_sbindir}"
 %{_sbindir}/*
+%endif
 %{_mandir}/man8/*
 
 %files -n %{libname}
