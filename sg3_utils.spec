@@ -12,7 +12,7 @@ Version:	1.48
 Release:	1
 License:	GPL+
 Group:		System/Kernel and hardware
-URL:		http://sg.danny.cz/sg/sg3_utils.html
+URL:		https://sg.danny.cz/sg/sg3_utils.html
 Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tar.xz
 #Source1:	http://www.garloff.de/kurt/linux/%{rescan_script}-%{rescan_version}
 Source2:	scsi-rescan.8
