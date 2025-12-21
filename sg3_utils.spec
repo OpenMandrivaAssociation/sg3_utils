@@ -18,6 +18,11 @@ Source0:	http://sg.danny.cz/sg/p/%{name}-%{version}.tar.xz
 Source2:	scsi-rescan.8
 Source3:	%{name}.rpmlintrc
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 %description
 Collection of tools for SCSI devices that use the Linux SCSI
 generic (sg) interface. Includes utilities to copy data based on
